@@ -61,10 +61,10 @@ Phase 2 (Advanced Terminal Protocol Support) has been successfully implemented w
    - Adding size validation in terminal state operations
    - Using saturating arithmetic for boundary calculations
    - Validating terminal size on startup
-3. **PTY Non-blocking I/O** - Fixed shells appearing to close output after input by:
-   - Setting PTY master file descriptor to non-blocking mode
-   - Properly handling EAGAIN/EWOULDBLOCK errors
-   - Not treating 0-byte reads as EOF in async context
+3. **PTY Async Architecture** - Fixed shells appearing to close output after input by:
+   - Using Arc<Mutex<>> pattern for safe reader/writer sharing across spawn_blocking
+   - Keeping blocking I/O (removed non-blocking mode that caused busy loops)
+   - Fixed the mem::replace pattern that was replacing reader with io::empty()
    - Shell processes now continue running and responding to multiple commands
 
 ### Next Steps (Phase 3):

@@ -128,11 +128,8 @@ impl Terminal {
                 result = self.pty.read(&mut buffer) => {
                     match result {
                         Ok(0) => {
-                            // With non-blocking I/O, 0 bytes doesn't necessarily mean EOF
-                            // It could just mean no data is available right now
-                            // We rely on the is_alive check to detect when the PTY actually closes
-                            debug!("PTY read returned 0 bytes (no data available)");
-                            // Don't break here - continue the loop
+                            info!("PTY read returned 0 bytes (EOF)");
+                            break;
                         }
                         Ok(n) => {
                             info!("PTY read successful: {} bytes", n);
