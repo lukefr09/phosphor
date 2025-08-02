@@ -1,5 +1,5 @@
 use crate::error::Result;
-use crate::types::{Position, Size, TerminalSnapshot};
+use crate::types::{Position, Size, TerminalSnapshot, Color};
 use async_trait::async_trait;
 
 /// Trait for terminal frontends (GUI frameworks)
@@ -45,6 +45,9 @@ pub trait TerminalParser: Send + Sync {
 pub enum ParsedEvent {
     Text(String),
     Control(ControlEvent),
+    Csi(CsiSequence),
+    Osc(OscSequence),
+    Esc(EscSequence),
 }
 
 #[derive(Debug, Clone)]
@@ -54,5 +57,141 @@ pub enum ControlEvent {
     Tab,
     Backspace,
     Clear,
-    // More to be added in Phase 2
+    Bell,
+    FormFeed,
+    VerticalTab,
+}
+
+/// Control Sequence Introducer (CSI) sequences
+#[derive(Debug, Clone)]
+pub enum CsiSequence {
+    // Cursor movement
+    CursorUp(u16),
+    CursorDown(u16),
+    CursorForward(u16),
+    CursorBack(u16),
+    CursorPosition { row: u16, col: u16 },
+    CursorColumn(u16),
+    CursorNextLine(u16),
+    CursorPreviousLine(u16),
+    
+    // Screen manipulation
+    EraseDisplay(EraseMode),
+    EraseLine(EraseMode),
+    ScrollUp(u16),
+    ScrollDown(u16),
+    
+    // Text attributes
+    SetGraphicsRendition(Vec<SgrParameter>),
+    
+    // Cursor visibility
+    ShowCursor,
+    HideCursor,
+    
+    // Modes
+    SetMode(Vec<Mode>),
+    ResetMode(Vec<Mode>),
+    
+    // Device status
+    DeviceStatusReport,
+    CursorPositionReport,
+    
+    // Save/Restore cursor
+    SaveCursor,
+    RestoreCursor,
+}
+
+/// Operating System Command (OSC) sequences
+#[derive(Debug, Clone)]
+pub enum OscSequence {
+    SetTitle(String),
+    SetIcon(String),
+    SetHyperlink { id: Option<String>, uri: String },
+    ResetHyperlink,
+    SetColor { index: u8, color: Color },
+    ResetColor(u8),
+    Clipboard { clipboard: ClipboardType, data: String },
+}
+
+/// ESC sequences (without CSI)
+#[derive(Debug, Clone)]
+pub enum EscSequence {
+    Index,                    // Move cursor down one line
+    NextLine,                 // Move to beginning of next line
+    TabSet,                   // Set tab stop at current position
+    ReverseIndex,             // Move cursor up one line
+    KeypadApplicationMode,    // DECKPAM
+    KeypadNumericMode,        // DECKPNM
+    SaveCursor,               // DECSC
+    RestoreCursor,            // DECRC
+    Reset,                    // RIS - Reset to Initial State
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum EraseMode {
+    Below,      // From cursor to end
+    Above,      // From beginning to cursor
+    All,        // Entire display/line
+    Saved,      // Erase saved lines (xterm)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SgrParameter {
+    Reset,
+    Bold,
+    Dim,
+    Italic,
+    Underline,
+    Blink,
+    Reverse,
+    Hidden,
+    Strikethrough,
+    
+    NoBold,
+    NoDim,
+    NoItalic,
+    NoUnderline,
+    NoBlink,
+    NoReverse,
+    NoHidden,
+    NoStrikethrough,
+    
+    Foreground(Color),
+    Background(Color),
+    UnderlineColor(Color),
+    
+    DefaultForeground,
+    DefaultBackground,
+    DefaultUnderlineColor,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Mode {
+    // ANSI modes
+    KeyboardAction,           // KAM
+    Insert,                   // IRM
+    SendReceive,              // SRM
+    LineFeed,                 // LNM
+    
+    // DEC private modes
+    ApplicationCursor,        // DECCKM
+    ApplicationKeypad,        // DECKPAM
+    ColumnMode,               // DECCOLM
+    ScrollMode,               // DECSCLM
+    ScreenMode,               // DECSCNM
+    OriginMode,               // DECOM
+    AutoWrap,                 // DECAWM
+    AutoRepeat,               // DECARM
+    MouseReporting,           // Various mouse modes
+    CursorVisible,            // DECTCEM
+    AlternateScreen,          // Alternate screen buffer
+    BracketedPaste,           // Bracketed paste mode
+    FocusReporting,           // Focus in/out reporting
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ClipboardType {
+    Clipboard,
+    Primary,
+    Secondary,
 }

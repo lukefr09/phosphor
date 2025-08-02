@@ -38,6 +38,11 @@ impl Cursor {
         self.position.col = col;
     }
     
+    /// Set the cursor column (alias for set_col)
+    pub fn set_column(&mut self, col: u16) {
+        self.position.col = col;
+    }
+    
     /// Move cursor up by n rows
     pub fn move_up(&mut self, n: u16) {
         self.position.row = self.position.row.saturating_sub(n);
@@ -56,6 +61,11 @@ impl Cursor {
     /// Move cursor right by n columns
     pub fn move_right(&mut self, n: u16) {
         self.position.col = self.position.col.saturating_add(n);
+    }
+    
+    /// Move cursor left by 1 column (saturating)
+    pub fn saturating_left(&mut self) {
+        self.position.col = self.position.col.saturating_sub(1);
     }
     
     /// Save the current cursor position

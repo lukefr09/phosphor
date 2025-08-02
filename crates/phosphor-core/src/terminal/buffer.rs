@@ -74,6 +74,32 @@ impl ScreenBuffer {
         }
     }
     
+    /// Clear a specific cell
+    pub fn clear_cell(&mut self, pos: Position) {
+        self.set_cell(pos, Cell::blank());
+    }
+    
+    /// Insert a blank line at the specified row
+    pub fn insert_blank_line(&mut self, row: u16) {
+        if row <= self.size.rows {
+            let row_idx = row as usize;
+            if row_idx < self.lines.len() {
+                self.lines.insert(row_idx, vec![Cell::blank(); self.size.cols as usize]);
+                // Limit to screen size
+                if self.lines.len() > self.size.rows as usize {
+                    self.lines.truncate(self.size.rows as usize);
+                }
+            }
+        }
+    }
+    
+    /// Remove the bottom line
+    pub fn remove_bottom_line(&mut self) {
+        if !self.lines.is_empty() {
+            self.lines.pop();
+        }
+    }
+    
     /// Resize the buffer
     pub fn resize(&mut self, new_size: Size) {
         // First resize columns for existing rows

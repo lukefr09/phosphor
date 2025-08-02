@@ -7,6 +7,7 @@ license.workspace = true
 
 [dependencies]
 phosphor-common = { path = "../phosphor-common" }
+phosphor-parser = { path = "../phosphor-parser" }
 
 # Workspace dependencies
 tokio = { workspace = true }
@@ -20,6 +21,9 @@ async-trait = { workspace = true }
 # Additional dependencies
 futures = "0.3"
 bytes = "1.5"
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
 
 [dev-dependencies]
 tempfile = { workspace = true }

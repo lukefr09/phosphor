@@ -8,3 +8,4 @@ license.workspace = true
 [dependencies]
 phosphor-common = { path = "../phosphor-common" }
 tracing = { workspace = true }
+vte = { workspace = true }

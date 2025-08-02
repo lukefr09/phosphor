@@ -5,6 +5,7 @@ members = [
     "crates/phosphor-common",
     "crates/phosphor-cli",
 ]
+exclude = ["test_pty_issue"]
 resolver = "2"
 
 [workspace.package]
@@ -36,6 +37,10 @@ serde = { version = "1.0", features = ["derive"] }
 
 # Utilities
 tokio-util = { version = "0.7", features = ["compat"] }
+bitflags = { version = "2.4", features = ["serde"] }
+
+# Terminal parsing
+vte = "0.13"
 
 # Testing
 proptest = "1.4"
