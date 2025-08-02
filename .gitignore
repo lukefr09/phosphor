@@ -1,0 +1,104 @@
+# Rust build artifacts
+/target/
+**/*.rs.bk
+*.pdb
+
+# Cargo lock file (optional - uncomment if you want to ignore it)
+# Cargo.lock
+
+# IDE and editor files
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Debug files
+*.dSYM/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test output
+*.profraw
+*.profdata
+
+# Documentation
+/target/doc/
+/target/debug/
+/target/release/
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+tmp/
+
+# Coverage reports
+*.lcov
+coverage/
+cobertura.xml
+
+# Benchmark results
+/target/criterion/
+
+# Environment files
+.env
+.env.local
+
+# OS specific files
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Backup files
+*.bak
+*.backup
+
+# Python cache (if using any Python scripts)
+__pycache__/
+*.pyc
+
+# Node modules (if using any JS tooling)
+node_modules/
+
+# Build outputs
+dist/
+build/
+out/
+
+# Phosphor-specific
+# Session data (if implementing session persistence)
+sessions/
+*.session
+
+# Plugin development artifacts
+plugins/target/
+plugins/*.wasm
+
+# Shader compilation cache
+shaders/cache/
+*.spv
+
+# Configuration overrides (keep defaults)
+config/local/
+*.local.toml
+
+# Performance profiling data
+perf.data
+perf.data.old
+flamegraph.svg
+*.perf
+
+# Core dumps
+core
+core.*
+*.core
+
+# Terminal recordings (for future phases)
+*.asciinema
+*.ttyrec
+recordings/
